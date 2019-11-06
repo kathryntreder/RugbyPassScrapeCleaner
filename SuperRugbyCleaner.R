@@ -1,11 +1,10 @@
+# The purpose of this file is to merge and clean the data that was scraped from the Rugby Pass website
+
 #install.packages("stringr")
 library(stringr)
 
-library(RColorBrewer)
 
-
-# read in all of the scraped data
-
+# read in all of the scraped data on stats
 blu <- read.csv("blues_Scrape10162019.csv")
 bru <- read.csv("brumbies_Scrape10162019.csv")
 bul <- read.csv("bulls_Scrape10162019.csv")
@@ -26,8 +25,7 @@ war <- read.csv("waratahs_Scrape10182019.csv")
 # merge stats
 stats <- rbind(blu, bru, bul, chi, cru, hil, hur, jag, lio, reb, red, sha, sto, sun, war)
 
-# upload minutes
-
+# upload data on the minutes played for each player
 bluMin <- read.csv("blues_Minutes_Games_Played_Scrape10252019.csv")
 bruMin <- read.csv("brumbies_Minutes_Games_Played_Scrape10252019.csv")
 bulMin <- read.csv("bulls_Minutes_Games_Played_Scrape10252019.csv")
@@ -45,7 +43,6 @@ sunMin <- read.csv("sunwolves_Minutes_Games_Played_Scrape10282019.csv")
 warMin <- read.csv("waratahs_Minutes_Games_Played_Scrape10282019.csv")
 
 # merge minutes data
-
 minutes <- rbind(bluMin, bruMin, bulMin, chiMin, cruMin, hilMin, hurMin, jagMin, lioMin, rebMin, redMin, shaMin, stoMin, sunMin, warMin)
 
 
@@ -57,7 +54,6 @@ data <- merge(stats, minutes, by = c("Name", "Year", "Team"))
 data$PosNumber <- NA
 
 for(i in 1:nrow(data)){
-  
   if(data$Position[i] == "Loose Head Prop"){
     data$PosNumber[i] <- 1
   } else if(data$Position[i] == "Hooker"){
@@ -104,7 +100,7 @@ data$Height <- as.integer(data$Height)
 data$MeteresPerRun <- data$Metres / data$Runs
 
 
-# correct the ages for each year
+# correct the ages for each year (rugby pass website did not change the age when we changed the year)
 for(i in 1:nrow(data)){
   yearDiff <- 2019 - data$Year[i]
   data$CorrectAge[i] <- data$Age[i] - yearDiff
@@ -119,5 +115,5 @@ for(i in 1:nrow(data)){
 }
 
 
-
+# export the data
 write.csv(data, "CLEAN_SuperRugbyComplete.csv")
