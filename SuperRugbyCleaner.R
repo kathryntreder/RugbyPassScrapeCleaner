@@ -45,6 +45,42 @@ warMin <- read.csv("waratahs_Minutes_Games_Played_Scrape10282019.csv")
 # merge minutes data
 minutes <- rbind(bluMin, bruMin, bulMin, chiMin, cruMin, hilMin, hurMin, jagMin, lioMin, rebMin, redMin, shaMin, stoMin, sunMin, warMin)
 
+# add the kicker minutes data
+bluMinKick <- read.csv("blues_Minutes_Games_Played_Kickers_11052019.csv")
+bruMinKick <- read.csv("brumbies_Minutes_Games_Played_Kickers_11052019.csv")
+bulMinKick <- read.csv("bulls_Minutes_Games_Played_Kickers_11052019.csv")
+chiMinKick <- read.csv("chiefs_Minutes_Games_Played_Kickers_11052019.csv")
+cruMinKick <- read.csv("crusaders_Minutes_Games_Played_Kickers_11052019.csv")
+hilMinKick <- read.csv("highlanders_Minutes_Games_Played_Kickers_11052019.csv")
+hurMinKick <- read.csv("hurricanes_Minutes_Games_Played_Kickers_11052019.csv")
+jagMinKick <- read.csv("jaguares_Minutes_Games_Played_Kickers_11052019.csv")
+lioMinKick <- read.csv("lions_Minutes_Games_Played_Kickers_11052019.csv")
+rebMinKick <- read.csv("rebels_Minutes_Games_Played_Kickers_11052019.csv")
+redMinKick <- read.csv("reds_Minutes_Games_Played_Kickers_11052019.csv")
+shaMinKick <- read.csv("sharks_Minutes_Games_Played_Kickers_11052019.csv")
+stoMinKick <- read.csv("stormers_Minutes_Games_Played_Kickers_11052019.csv")
+sunMinKick <- read.csv("sunwolves_Minutes_Games_Played_Kickers_11052019.csv")
+warMinKick <- read.csv("waratahs_Minutes_Games_Played_Kickers_11052019.csv")
+
+# subset to the columns we care about
+bluMinKick <- select(bluMinKick, 1:5); bruMinKick <- select(bruMinKick, 1:5)
+bulMinKick <- select(bulMinKick, 1:5); chiMinKick <- select(chiMinKick, 1:5) 
+cruMinKick <- select(cruMinKick, 1:5); hilMinKick <- select(hilMinKick, 1:5)
+hurMinKick <- select(hurMinKick, 1:5); jagMinKick <- select(jagMinKick, 1:5)
+lioMinKick <- select(lioMinKick, 1:5); rebMinKick <- select(rebMinKick, 1:5)
+redMinKick <- select(redMinKick, 1:5); shaMinKick <- select(shaMinKick, 1:5)
+stoMinKick <- select(stoMinKick, 1:5); sunMinKick <- select(sunMinKick, 1:5)
+warMinKick <- select(warMinKick, 1:5)
+
+# merge the kicking data
+minutesKick <- rbind(bluMinKick, bruMinKick, bulMinKick, chiMinKick, cruMinKick, hilMinKick, hurMinKick, jagMinKick, lioMinKick, rebMinKick, redMinKick, shaMinKick, stoMinKick, sunMinKick, warMinKick)
+
+# replace the NAs in the minutes data for kickers with the minutes data for kickers just uploaded
+for(i in 1:nrow(minutes)){
+  row <- which(minutes$Name == as.character(minutesKick$Name[i]) & minutes$Year == minutesKick$Year[i] & minutes$Team == minutesKick$Team[i])
+  minutes$Minutes.Played[row] <- minutesKick$Minutes.Played[i]
+  minutes$Games[row] <- minutesKick$Games[i]
+}
 
 # merge stats and minutes data
 data <- merge(stats, minutes, by = c("Name", "Year", "Team"))
