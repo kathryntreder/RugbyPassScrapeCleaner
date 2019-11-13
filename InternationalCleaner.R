@@ -46,10 +46,18 @@ walMin <- read.csv("wales_Minutes_Games_Played_Scrape10252019.csv")
 # merge minutes data
 minutes <- rbind(argMin, ausMin, canMin, engMin, fijiMin, fraMin, ireMin, itaMin, japMin, nzlMin, safMin, samMin, scoMin, tonMin, usaMin, walMin)
 
+# read in the dataset that contains minute and game data on kickers
+kickMinutes <- read.csv("MensInternationals_KickerMinutesGames.csv")
+
+# replace the NAs in the minutes data for kickers with the minutes data just uploaded
+for(i in 1:nrow(minutes)){
+  row <- which(minutes$Name == as.character(kickMinutes$Name[i]) & minutes$Year == kickMinutes$Year[i] & minutes$Team == kickMinutes$Team[i])
+  minutes$Minutes.Played[row] <- kickMinutes$Minutes.Played[i]
+  minutes$Games[row] <- kickMinutes$Games[i]
+}
 
 # merge stats and minutes data
 data <- merge(stats, minutes, by = c("Name", "Year", "Team"))
-
 
 # create a numberic attribute for each player position
 data$PosNumber <- NA
